@@ -8,7 +8,7 @@ const {
 
 const routes = (router) => {
   router.route('/user')
-    .post(userController.createUser);
+    .post(userController.signUp);
 }
 
 export default routes;
