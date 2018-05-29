@@ -42,7 +42,13 @@ export default {
                     },
                     code: 201,
                   });
-            })
+            }).catch((error) => {
+                return response.status(400).send({
+                    message: `message: ${error.name}`,
+                    data: error,
+                    code: 400,
+                })
+            });
         })
     }
 }
