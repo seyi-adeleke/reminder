@@ -5,13 +5,12 @@ const {
 } = controllers;
 
 
-
 const routes = (router) => {
   router.route('/user')
     .post(userController.signUp);
-  
+
   router.route('/user/signin')
-    .post(userController.signIn)
-}
+    .post(userController.signIn);
+};
 
 export default routes;

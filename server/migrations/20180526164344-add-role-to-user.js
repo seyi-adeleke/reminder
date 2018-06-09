@@ -1,5 +1,4 @@
-'use strict';
-
+/*eslint-disable */
 module.exports = {
   up: (queryInterface, Sequelize) => {
       return queryInterface.addColumn('Users', 'role',
