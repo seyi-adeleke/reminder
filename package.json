@@ -6,12 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development nodemon ./server/index.js --exec babel-node",
-    "migrate": "cd server && sequelize db:migrate"
+    "migrate": "cd server && sequelize db:migrate && cd .."
   },
   "keywords": [],
   "author": "Seyi Adeleke",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
