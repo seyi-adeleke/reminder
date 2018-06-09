@@ -1,4 +1,11 @@
+import jwt from 'jsonwebtoken';
+
 import models from '../models';
+import utitlity from '../utils/Utilities';
+import httpHelpers from '../utils/httpUtilites';
+
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
 
 const { User } = models;
 
@@ -49,6 +56,40 @@ export default {
                     code: 400,
                 })
             });
+        })
+    },
+
+    signIn: (request, response) => {
+        const {
+            username,
+            password,
+        } = request.body;
+
+        User.findOne({
+            where: {
+                username,
+            },
+            attributes: ['firstname', 'lastname', 'email', 'username', 'role', 'password']
+        }).then(user => {
+            if (!user) {
+                return response.status(404).send({
+                    message: 'This user does not exist',
+                    code: 404,
+                  });
+            }
+            utitlity.comparePassword(password, user.password).then((result) => {
+                if (result) {
+                    const token = jwt.sign({user}, config.jwt_secret, { expiresIn: '24h' });
+                    return httpHelpers.constructOkResponse(200, 'Login succesfull', user, { token }, response);
+                }
+                return httpHelpers.constructInvalidRequest(401, 'Invalid username/password',response);
+            });
+        }).catch((error) => {
+            return response.status(400).send({
+                message: `message: ${error.name}`,
+                data: error,
+                code: 400,
+            })
         })
     }
 }
