@@ -6,4 +6,4 @@ export default {
         const match = await bcrypt.compare(plainTextPassword, hash);
         return match;
     },
-}
+};
