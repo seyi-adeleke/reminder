@@ -29,6 +29,7 @@ export default (sequelize, DataTypes) => {
         role: {
             allowNull: false,
             type: DataTypes.INTEGER,
+            defaultValue: 2,
         },
     }, {
         hooks: {

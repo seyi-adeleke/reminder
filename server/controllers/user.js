@@ -37,7 +37,6 @@ export default {
                 lastname,
                 username,
                 password,
-                role: 1,
             }).then(newUser => response.status(201).send({
                 message: 'User Created successfully',
                 data: {
