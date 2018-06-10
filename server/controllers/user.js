@@ -98,4 +98,19 @@ export default {
                 code: 400,
             }));
     },
+
+    getUser: (request, response) => {
+        User.findOne({
+            where: {
+                id: request.params.id,
+            },
+            attributes: { exclude: ['password'] },
+        }).then((user) => {
+            if (user) {
+                return httpHelpers.constructOkResponse(200, 'User Found', user, null, response);
+            }
+            return httpHelpers.constructOkResponse(200, 'This user does not exist', [], null, response);
+        }).catch(error => httpHelpers.constructBadResponse(501, 'There was an error processing this request', error.message, response));
+    },
+
 };

@@ -1,5 +1,5 @@
 import controllers from '../controllers';
-import { isAdmin, isAuthenticated } from '../middleware';
+import { isAdmin, isAuthenticated, validateParams } from '../middleware';
 
 const {
     userController,
@@ -11,9 +11,11 @@ const routes = (router) => {
         .get(isAuthenticated, isAdmin, userController.getUsers)
         .post(userController.signUp);
 
-
     router.route('/user/signin')
         .post(userController.signIn);
+
+    router.route('/user/:id')
+        .get(isAuthenticated, validateParams, userController.getUser);
 };
 
 export default routes;

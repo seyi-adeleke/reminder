@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import httpHelpers from '../utils/httpUtilites';
 
 const env = process.env.NODE_ENV || 'development';
-
 // eslint-disable-next-line
 const config = require(`${__dirname}/../config/config.json`)[env];
 
@@ -24,10 +23,23 @@ const isAuthenticated = (req, res, next) => {
     });
 };
 
-
 const isAdmin = (req, res, next) => {
     if (!req.isAdmin) {
         return httpHelpers.constructInvalidRequest(403, 'You do not have access to this resource', res);
+    }
+    return next();
+};
+
+const validateParams = (req, res, next) => {
+    const params = { ...req.params, id: parseInt(req.params.id, 10) };
+    const paramKeys = Object.keys(params);
+    const checkInvalidParams = paramKeys.filter((key) => {
+        if (Number.isNaN(params[`${key}`])) {
+            return key;
+        }
+    });
+    if (checkInvalidParams.length) {
+        return httpHelpers.constructInvalidRequest(400, 'Invalid Query Parameters', res);
     }
     return next();
 };
@@ -36,4 +48,5 @@ const isAdmin = (req, res, next) => {
 export {
     isAdmin,
     isAuthenticated,
+    validateParams,
 };
