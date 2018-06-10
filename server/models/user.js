@@ -40,5 +40,11 @@ export default (sequelize, DataTypes) => {
         },
     });
 
+    User.associate = (models) => {
+        User.hasMany(models.Reminder, {
+            foreignKey: 'user',
+            as: 'Reminders',
+        });
+    };
     return User;
 };
