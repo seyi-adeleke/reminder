@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
-import httpHelpers from '../utils/httpUtilites';
+import httpUtilites from '../utils/httpUtilites';
+import utils from '../utils/Utilities';
+
 
 const env = process.env.NODE_ENV || 'development';
 // eslint-disable-next-line
@@ -7,13 +9,13 @@ const config = require(`${__dirname}/../config/config.json`)[env];
 
 const isAuthenticated = (req, res, next) => {
     if (!req.headers.authorization) {
-        return httpHelpers.constructInvalidRequest(401, 'You are not logged in', res);
+        return httpUtilites.constructInvalidRequest(401, 'You are not logged in', res);
     }
     const token = req.headers.authorization;
 
     jwt.verify(token, config.jwt_secret, (error, decoded) => {
         if (error) {
-            return httpHelpers.constructInvalidRequest(400, 'There was an error processing your request', res);
+            return httpUtilites.constructInvalidRequest(400, 'There was an error processing your request', res);
         }
         req.decoded = decoded;
         if (req.decoded.user.role === 1) {
@@ -25,7 +27,7 @@ const isAuthenticated = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
     if (!req.isAdmin) {
-        return httpHelpers.constructInvalidRequest(403, 'You do not have access to this resource', res);
+        return httpUtilites.constructInvalidRequest(403, 'You do not have access to this resource', res);
     }
     return next();
 };
@@ -39,7 +41,22 @@ const validateParams = (req, res, next) => {
         }
     });
     if (checkInvalidParams.length) {
-        return httpHelpers.constructInvalidRequest(400, 'Invalid Query Parameters', res);
+        return httpUtilites.constructInvalidRequest(400, 'Invalid Query Parameters', res);
+    }
+    return next();
+};
+
+const validateSignUpRequest = (req, res, next) => {
+    const {
+        email,
+        firstname,
+        lastname,
+        username,
+        password,
+    } = req.body;
+    if (!utils.isValidEmail(email) ||
+        !utils.checkStringsValidity(firstname, lastname, username, password)) {
+        return httpUtilites.constructInvalidRequest(400, 'Invalid request body', res);
     }
     return next();
 };
@@ -49,4 +66,5 @@ export {
     isAdmin,
     isAuthenticated,
     validateParams,
+    validateSignUpRequest,
 };
