@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import models from '../models';
 import utitlity from '../utils/Utilities';
-import httpHelpers from '../utils/httpUtilites';
+import httpUtilities from '../utils/httpUtilites';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -26,32 +26,29 @@ export default {
             },
         }).then((user) => {
             if (user) {
-                return response.status(422).send({
-                    message: 'username and email must be unique',
-                    code: 422,
-                });
+                return httpUtilities.constructInvalidRequest(422, 'username and email must be unique', response);
             }
-            User.create({
+            const payload = utitlity.trim({
                 email,
                 firstname,
                 lastname,
                 username,
                 password,
-            }).then(newUser => response.status(201).send({
-                message: 'User Created successfully',
-                data: {
+            });
+            User.create(payload).then((newUser) => {
+                const data = {
                     email: newUser.email,
                     firstname: newUser.firstname,
                     lastname: newUser.lastname,
                     username: newUser.username,
-                },
-                code: 201,
-            })).catch(error => response.status(400).send({
+                };
+                return httpUtilities.constructOkResponse(201, 'User Created successfully', data, null, response);
+            }).catch(error => response.status(400).send({
                 message: `message: ${error.name}`,
                 data: error,
                 code: 400,
             }));
-        });
+        }).catch(error => httpUtilities.constructBadResponse(error.code, error.message, response));
     },
 
     signIn: (request, response) => {
@@ -75,9 +72,9 @@ export default {
             utitlity.comparePassword(password, user.password).then((result) => {
                 if (result) {
                     const token = jwt.sign({ user }, config.jwt_secret, { expiresIn: '24h' });
-                    return httpHelpers.constructOkResponse(200, 'Login succesfull', user, { token }, response);
+                    return httpUtilities.constructOkResponse(200, 'Login succesfull', user, { token }, response);
                 }
-                return httpHelpers.constructInvalidRequest(401, 'Invalid username/password', response);
+                return httpUtilities.constructInvalidRequest(401, 'Invalid username/password', response);
             });
             return null;
         }).catch(error => response.status(400).send({
@@ -90,7 +87,7 @@ export default {
     getUsers: (request, response) => {
         User.findAll({
             attributes: { exclude: ['password'] },
-        }).then(users => httpHelpers.constructOkResponse(200, 'Users found', users, null, response))
+        }).then(users => httpUtilities.constructOkResponse(200, 'Users found', users, null, response))
             .catch(error => response.status(400).send({
                 message: `message: ${error.name}`,
                 data: error,
@@ -106,10 +103,10 @@ export default {
             attributes: { exclude: ['password'] },
         }).then((user) => {
             if (user) {
-                return httpHelpers.constructOkResponse(200, 'User Found', user, null, response);
+                return httpUtilities.constructOkResponse(200, 'User Found', user, null, response);
             }
-            return httpHelpers.constructOkResponse(200, 'This user does not exist', [], null, response);
-        }).catch(error => httpHelpers.constructBadResponse(501, 'There was an error processing this request', error.message, response));
+            return httpUtilities.constructOkResponse(200, 'This user does not exist', [], null, response);
+        }).catch(error => httpUtilities.constructBadResponse(501, 'There was an error processing this request', error.message, response));
     },
 
 };

@@ -1,5 +1,10 @@
 import controllers from '../controllers';
-import { isAdmin, isAuthenticated, validateParams } from '../middleware';
+import {
+    isAdmin,
+    isAuthenticated,
+    validateParams,
+    validateSignUpRequest,
+} from '../middleware';
 
 const {
     userController,
@@ -9,7 +14,7 @@ const {
 const routes = (router) => {
     router.route('/user')
         .get(isAuthenticated, isAdmin, userController.getUsers)
-        .post(userController.signUp);
+        .post(validateSignUpRequest, userController.signUp);
 
     router.route('/user/signin')
         .post(userController.signIn);
