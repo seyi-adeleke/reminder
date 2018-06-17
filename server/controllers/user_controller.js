@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV || 'development';
 
 // eslint-disable-next-line
 const config = require(`${__dirname}/../config/config.json`)[env];
-const { User } = models;
+const { User, Reminder } = models;
 
 export default {
     signUp: (request, response) => {
@@ -87,6 +87,10 @@ export default {
 
     getUsers: (request, response) => {
         User.findAll({
+            include: [{
+                model: Reminder,
+                as: 'Reminders',
+            }],
             attributes: { exclude: ['password'] },
         }).then(users => httpUtilities.constructOkResponse(200, 'Users found', users, null, response))
             .catch(error => response.status(400).send({
@@ -109,5 +113,24 @@ export default {
             return httpUtilities.constructOkResponse(200, 'This user does not exist', [], null, response);
         }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
+
+    getReminders: (request, response) => {
+        User.findOne({
+            where: {
+                id: request.params.id,
+            },
+        }).then((user) => {
+            if (user) {
+                return user.getReminders().then((reminders) => {
+                    if (!reminders.length) {
+                        return httpUtilities.constructOkResponse(205, 'This user does not have any reminders', [], null, response);
+                    }
+                    return httpUtilities.constructOkResponse(200, 'Reminders Found', reminders, null, response);
+                });
+            }
+            return httpUtilities.constructOkResponse(200, 'This user does not exist', [], null, response);
+        }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
+    },
+
 
 };
