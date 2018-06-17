@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Reminder.associate = (models) => {
-        Reminder.belongsTo(models.Reminder, {
+        Reminder.belongsTo(models.User, {
             foreignKey: 'user',
             onDelete: 'CASCADE',
         });
