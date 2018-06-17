@@ -106,7 +106,7 @@ export default {
                 return httpUtilities.constructOkResponse(200, 'User Found', user, null, response);
             }
             return httpUtilities.constructOkResponse(200, 'This user does not exist', [], null, response);
-        }).catch(error => httpUtilities.constructBadResponse(501, 'There was an error processing this request', error.message, response));
+        }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
 
 };
