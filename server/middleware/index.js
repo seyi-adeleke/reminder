@@ -69,10 +69,27 @@ const validateCreateReminderRequest = (req, res, next) => {
     return next();
 };
 
+const validateAccess = (req, res, next) => {
+    if (req.isAdmin) {
+        return next();
+    }
+    const {
+        user: {
+            id,
+        },
+    } = req.decoded;
+
+    if (id !== parseInt(req.params.id, 10)) {
+        return httpUtilites.constructInvalidRequest(403, 'You do not have access to this resource', res);
+    }
+    return next();
+};
+
 export {
     isAdmin,
     isAuthenticated,
     validateParams,
     validateSignUpRequest,
     validateCreateReminderRequest,
+    validateAccess,
 };

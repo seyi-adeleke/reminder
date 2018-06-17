@@ -4,6 +4,7 @@ import {
     isAuthenticated,
     validateParams,
     validateSignUpRequest,
+    validateAccess,
 } from '../middleware';
 
 const {
@@ -21,6 +22,9 @@ const routes = (router) => {
 
     router.route('/users/:id')
         .get(isAuthenticated, validateParams, userController.getUser);
+
+    router.route('/users/:id/reminders')
+        .get(isAuthenticated, validateParams, validateAccess, userController.getReminders);
 };
 
 export default routes;
