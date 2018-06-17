@@ -48,6 +48,7 @@ export default {
                 data: error,
                 code: 400,
             }));
+            return null;
         }).catch(error => httpUtilities.constructBadResponse(error.code, error.message, response));
     },
 
@@ -61,7 +62,7 @@ export default {
             where: {
                 username,
             },
-            attributes: ['firstname', 'lastname', 'email', 'username', 'role', 'password'],
+            attributes: ['firstname', 'lastname', 'email', 'username', 'role', 'password', 'id'],
         }).then((user) => {
             if (!user) {
                 return response.status(404).send({

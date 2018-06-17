@@ -12,14 +12,14 @@ const {
 
 
 const routes = (router) => {
-    router.route('/user')
+    router.route('/users')
         .get(isAuthenticated, isAdmin, userController.getUsers)
         .post(validateSignUpRequest, userController.signUp);
 
-    router.route('/user/signin')
+    router.route('/users/signin')
         .post(userController.signIn);
 
-    router.route('/user/:id')
+    router.route('/users/:id')
         .get(isAuthenticated, validateParams, userController.getUser);
 };
 

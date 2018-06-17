@@ -61,10 +61,18 @@ const validateSignUpRequest = (req, res, next) => {
     return next();
 };
 
+const validateCreateReminderRequest = (req, res, next) => {
+    const { message, triggerDate } = req.body;
+    if (!utils.checkStringsValidity(message) || !utils.checkDateValidity(triggerDate)) {
+        return httpUtilites.constructInvalidRequest(400, 'Invalid request body', res);
+    }
+    return next();
+};
 
 export {
     isAdmin,
     isAuthenticated,
     validateParams,
     validateSignUpRequest,
+    validateCreateReminderRequest,
 };

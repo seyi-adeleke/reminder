@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-
+import moment from 'moment';
 
 export default {
     comparePassword: async (plainTextPassword, hash) => {
@@ -24,4 +24,7 @@ export default {
         acc[key.trim()] = stringsObject[key].trim();
         return acc;
     }, {}),
+
+    checkDateValidity: date => moment(date, 'MM-DD-YYYY').isValid(),
+
 };
