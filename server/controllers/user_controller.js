@@ -72,7 +72,7 @@ export default {
             }
             utitlity.comparePassword(password, user.password).then((result) => {
                 if (result) {
-                    const token = jwt.sign({ user }, config.jwt_secret, { expiresIn: '24h' });
+                    const token = jwt.sign({ id: user.id, role: user.role }, config.jwt_secret, { expiresIn: '24h' });
                     return httpUtilities.constructOkResponse(200, 'Login succesfull', user, { token }, response);
                 }
                 return httpUtilities.constructInvalidRequest(401, 'Invalid username/password', response);
@@ -114,7 +114,7 @@ export default {
         }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
 
-    getReminders: (request, response) => {
+    getUserReminders: (request, response) => {
         User.findOne({
             where: {
                 id: request.params.id,
