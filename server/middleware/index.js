@@ -12,13 +12,12 @@ const isAuthenticated = (req, res, next) => {
         return httpUtilites.constructInvalidRequest(401, 'You are not logged in', res);
     }
     const token = req.headers.authorization;
-
     jwt.verify(token, config.jwt_secret, (error, decoded) => {
         if (error) {
             return httpUtilites.constructInvalidRequest(400, 'There was an error processing your request', res);
         }
         req.decoded = decoded;
-        if (req.decoded.user.role === 1) {
+        if (req.decoded.role === 1) {
             req.isAdmin = true;
         }
         return next();
@@ -74,9 +73,7 @@ const validateAccess = (req, res, next) => {
         return next();
     }
     const {
-        user: {
-            id,
-        },
+        id,
     } = req.decoded;
 
     if (id !== parseInt(req.params.id, 10)) {

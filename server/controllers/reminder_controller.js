@@ -25,4 +25,17 @@ export default {
             .catch(error => httpUtilities.constructBadResponse(501, 'There was an error processing this request', error.message, response));
     },
 
+    getReminder: (request, response) => {
+        Reminder.findOne({
+            where: {
+                id: request.params.id,
+            },
+        }).then((reminder) => {
+            if (reminder) {
+                return httpUtilities.constructOkResponse(200, 'Reminder Found', reminder, null, response);
+            }
+            return httpUtilities.constructOkResponse(200, 'This reminder does not exist', [], null, response);
+        }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
+    },
+
 };
