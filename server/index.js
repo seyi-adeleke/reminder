@@ -10,6 +10,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 routes(router);
 
 app.get('/', (req, res) => res.send('Hello World!'));
-app.use('/v1/api', router);
+app.use('/api/v1', router);
 
 app.listen(3000);

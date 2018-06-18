@@ -24,7 +24,7 @@ const routes = (router) => {
         .get(isAuthenticated, validateParams, userController.getUser);
 
     router.route('/users/:id/reminders')
-        .get(isAuthenticated, validateParams, validateAccess, userController.getReminders);
+        .get(isAuthenticated, validateParams, validateAccess, userController.getUserReminders);
 };
 
 export default routes;
