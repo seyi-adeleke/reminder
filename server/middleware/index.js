@@ -75,7 +75,6 @@ const validateAccess = (req, res, next) => {
     const {
         id,
     } = req.decoded;
-
     if (id !== parseInt(req.params.id, 10)) {
         return httpUtilites.constructInvalidRequest(403, 'You do not have access to this resource', res);
     }
