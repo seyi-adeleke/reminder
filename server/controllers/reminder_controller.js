@@ -31,8 +31,10 @@ export default {
                 id: request.params.id,
             },
         }).then((reminder) => {
-            if (reminder) {
+            if (reminder && reminder.user === request.decoded.id) {
                 return httpUtilities.constructOkResponse(200, 'Reminder Found', reminder, null, response);
+            } else if (reminder.user !== request.decoded.id) {
+                return httpUtilities.constructInvalidRequest(403, 'You do not have access to this resource', response);
             }
             return httpUtilities.constructOkResponse(200, 'This reminder does not exist', [], null, response);
         }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
