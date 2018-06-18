@@ -3,7 +3,6 @@ import {
     isAdmin,
     isAuthenticated,
     validateCreateReminderRequest,
-    validateAccess,
     validateParams,
 } from '../middleware';
 
@@ -17,7 +16,7 @@ const routes = (router) => {
         .post(isAuthenticated, validateCreateReminderRequest, reminderController.createReminder);
 
     router.route('/reminders/:id')
-        .get(isAuthenticated, validateParams, validateAccess, reminderController.getReminder);
+        .get(isAuthenticated, validateParams, reminderController.getReminder);
 };
 
 export default routes;
