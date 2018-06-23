@@ -31,6 +31,10 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 2,
         },
+        deleted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     }, {
         hooks: {
             beforeCreate: (user) => {
