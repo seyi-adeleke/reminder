@@ -136,5 +136,4 @@ export default {
         }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
 
-
 };
