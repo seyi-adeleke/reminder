@@ -40,4 +40,21 @@ export default {
         }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
 
+    deleteReminder: (request, response) => {
+        Reminder.findOne({
+            where: {
+                id: request.params.id,
+            },
+        }).then((reminder) => {
+            if (reminder.deleted) {
+                return httpUtilities.constructInvalidRequest(409, 'This resource has been deleted already', response);
+            }
+            reminder.update({
+                deleted: true,
+                updateAt: Date.now(),
+            }).then(() => httpUtilities.constructOkResponse(200, 'Resource successfully deleted', [], null, response));
+            return null;
+        }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
+    },
+
 };
