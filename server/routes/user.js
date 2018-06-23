@@ -21,7 +21,8 @@ const routes = (router) => {
         .post(userController.signIn);
 
     router.route('/users/:id')
-        .get(isAuthenticated, validateParams, userController.getUser);
+        .get(isAuthenticated, validateParams, userController.getUser)
+        .delete(isAuthenticated, isAdmin, userController.deleteUser);
 
     router.route('/users/:id/reminders')
         .get(isAuthenticated, validateParams, validateAccess, userController.getUserReminders);
