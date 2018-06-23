@@ -121,7 +121,11 @@ export default {
             },
         }).then((user) => {
             if (user) {
-                return user.getReminders().then((reminders) => {
+                return user.getReminders({
+                    where: {
+                        deleted: false,
+                    },
+                }).then((reminders) => {
                     if (!reminders.length) {
                         return httpUtilities.constructOkResponse(205, 'This user does not have any reminders', [], null, response);
                     }

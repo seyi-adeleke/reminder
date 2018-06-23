@@ -18,7 +18,7 @@ const routes = (router) => {
 
     router.route('/reminders/:id')
         .get(isAuthenticated, validateParams, reminderController.getReminder)
-        .patch(isAuthenticated, validateAccess, validateParams, reminderController.deleteReminder);
+        .delete(isAuthenticated, validateAccess, validateParams, reminderController.deleteReminder);
 };
 
 export default routes;
