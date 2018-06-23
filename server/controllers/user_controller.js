@@ -144,6 +144,9 @@ export default {
                 id: request.params.id,
             },
         }).then((user) => {
+            if (user === null) {
+                return httpUtilities.constructInvalidRequest(404, 'This User does not exist', response);
+            }
             if (user.role === 1) {
                 return httpUtilities.constructInvalidRequest(409, 'You cannot delete this resource', response);
             }
@@ -173,7 +176,7 @@ export default {
                 });
             });
             return null;
-        }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
+        }).catch(error => httpUtilities.constructBadResponse(501, 'There was an error processing this request', error.message, response));
     },
 
 };
