@@ -4,6 +4,7 @@ import {
     isAuthenticated,
     validateCreateReminderRequest,
     validateParams,
+    validateAccess,
 } from '../middleware';
 
 const {
@@ -16,7 +17,8 @@ const routes = (router) => {
         .post(isAuthenticated, validateCreateReminderRequest, reminderController.createReminder);
 
     router.route('/reminders/:id')
-        .get(isAuthenticated, validateParams, reminderController.getReminder);
+        .get(isAuthenticated, validateParams, reminderController.getReminder)
+        .patch(isAuthenticated, validateAccess, validateParams, reminderController.deleteReminder);
 };
 
 export default routes;
