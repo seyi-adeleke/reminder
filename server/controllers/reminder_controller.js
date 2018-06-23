@@ -12,11 +12,7 @@ export default {
 
     createReminder: (request, response) => {
         const { message, triggerDate } = request.body;
-        const {
-            user: {
-                id,
-            },
-        } = request.decoded;
+        const { id } = request.decoded;
         Reminder.create({
             message: message.trim(),
             user: id,

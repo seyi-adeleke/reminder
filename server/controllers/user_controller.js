@@ -61,6 +61,7 @@ export default {
         User.findOne({
             where: {
                 username,
+                deleted: false,
             },
             attributes: ['firstname', 'lastname', 'email', 'username', 'role', 'password', 'id'],
         }).then((user) => {
@@ -104,6 +105,7 @@ export default {
         User.findOne({
             where: {
                 id: request.params.id,
+                deleted: false,
             },
             attributes: { exclude: ['password'] },
         }).then((user) => {
@@ -151,7 +153,25 @@ export default {
             user.update({
                 deleted: true,
                 updateAt: Date.now(),
-            }).then(() => httpUtilities.constructOkResponse(200, 'Resource successfully deleted', [], null, response));
+            }).then(() => {
+                user.getReminders({
+                    where: {
+                        deleted: false,
+                    },
+                }).then((reminders) => {
+                    const reminderIds = reminders.map(reminder => reminder.id);
+                    Reminder.update({
+                        updatedAt: Date.now(),
+                        deleted: true,
+                    }, {
+                        where: {
+                            id: {
+                                $in: reminderIds,
+                            },
+                        },
+                    }).then(() => httpUtilities.constructOkResponse(200, 'Resource succesfully deleted', [], null, response));
+                });
+            });
             return null;
         }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
