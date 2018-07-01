@@ -3,12 +3,14 @@ import jwt from 'jsonwebtoken';
 import models from '../models';
 import utitlity from '../utils/Utilities';
 import httpUtilities from '../utils/httpUtilites';
+import services from '../Services';
 
 const env = process.env.NODE_ENV || 'development';
 
 // eslint-disable-next-line
 const config = require(`${__dirname}/../config/config.json`)[env];
 const { User, Reminder } = models;
+const { emailService } = services;
 
 export default {
     signUp: (request, response) => {
@@ -42,6 +44,13 @@ export default {
                     lastname: newUser.lastname,
                     username: newUser.username,
                 };
+                emailService.sendEmail({
+                    to: data.email,
+                    from: 'admin@reminder.io',
+                    subject: 'Sending with SendGrid is Fun',
+                    text: 'and easy to do anywhere, even with Node.js',
+                    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+                });
                 return httpUtilities.constructOkResponse(201, 'User Created successfully', data, null, response);
             }).catch(error => response.status(400).send({
                 message: `message: ${error.name}`,
@@ -92,6 +101,9 @@ export default {
                 model: Reminder,
                 as: 'Reminders',
             }],
+            where: {
+                deleted: false,
+            },
             attributes: { exclude: ['password'] },
         }).then(users => httpUtilities.constructOkResponse(200, 'Users found', users, null, response))
             .catch(error => response.status(400).send({
