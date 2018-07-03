@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import utitlity from '../utils/Utilities';
 
 export default (sequelize, DataTypes) => {
     const User = sequelize.define('User', {
@@ -39,12 +40,17 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        verified_hash: {
+            allowNull: true,
+            type: DataTypes.STRING,
+        },
     }, {
         hooks: {
             beforeCreate: (user) => {
                 const salt = bcrypt.genSaltSync(10);
                 const hash = bcrypt.hashSync(user.password, salt);
                 user.password = hash;
+                user.verified_hash = utitlity.randomHash(12);
             },
         },
     });
