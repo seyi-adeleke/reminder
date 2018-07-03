@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import moment from 'moment';
+import crypto from 'crypto';
+
 
 export default {
     comparePassword: async (plainTextPassword, hash) => {
@@ -27,4 +29,5 @@ export default {
 
     checkDateValidity: date => moment(date, 'MM-DD-YYYY').isValid(),
 
+    randomHash: length => crypto.randomBytes(length).toString('hex'),
 };
