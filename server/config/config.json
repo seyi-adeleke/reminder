@@ -5,7 +5,8 @@
     "database": "reminder",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "jwt_secret": "secretjwtcode"
+    "jwt_secret": "secretjwtcode",
+    "api_url": "http://localhost:3000/api/v1/"
   },
   "test": {
     "use_env_variable": "TEST_DB",
