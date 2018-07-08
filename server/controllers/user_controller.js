@@ -10,7 +10,11 @@ const env = process.env.NODE_ENV || 'development';
 // eslint-disable-next-line
 const config = require(`${__dirname}/../config/config.json`)[env];
 const { User, Reminder } = models;
-const { emailService } = services;
+
+const { EmailService } = services;
+
+const emailHelper = new EmailService();
+
 
 export default {
     signUp: (request, response) => {
@@ -23,8 +27,7 @@ export default {
         } = request.body;
         User.findOne({
             where: {
-                email,
-                username,
+                $or: [{ email }, { username }],
             },
         }).then((user) => {
             if (user) {
@@ -43,14 +46,9 @@ export default {
                     firstname: newUser.firstname,
                     lastname: newUser.lastname,
                     username: newUser.username,
+                    verifiedHash: newUser.verified_hash,
                 };
-                emailService.sendEmail({
-                    to: data.email,
-                    from: 'admin@reminder.io',
-                    subject: 'Sending with SendGrid is Fun',
-                    text: 'and easy to do anywhere, even with Node.js',
-                    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-                });
+                emailHelper.signupEmail(data);
                 return httpUtilities.constructOkResponse(201, 'User Created successfully', data, null, response);
             }).catch(error => response.status(400).send({
                 message: `message: ${error.name}`,
@@ -189,6 +187,24 @@ export default {
             });
             return null;
         }).catch(error => httpUtilities.constructBadResponse(501, 'There was an error processing this request', error.message, response));
+    },
+
+    verifyUser: (request, response) => {
+        User.findOne({
+            where: {
+                id: request.decoded.id,
+                verified_hash: request.params.hash,
+            },
+        }).then((user) => {
+            if (user) {
+                user.update({
+                    verified: true,
+                    verified_hash: null,
+                });
+                return httpUtilities.constructOkResponse(200, 'User Verified!', [], null, response);
+            }
+            return httpUtilities.constructOkResponse(200, 'This user does not exist', [], null, response);
+        }).catch(error => httpUtilities.constructBadResponse(error.code, 'There was an error processing this request', error.message, response));
     },
 
 };

@@ -1,0 +1,62 @@
+<style type="text/css">
+    .header {
+      background: #8a8a8a;
+    }
+    .header .columns {
+      padding-bottom: 0;
+    }
+    .header p {
+      color: #fff;
+      padding-top: 15px;
+    }
+    .header .wrapper-inner {
+      padding: 20px;
+    }
+    .header .container {
+      background: transparent;
+    }
+    table.button.facebook table td {
+      background: #3B5998 !important;
+      border-color: #3B5998;
+    }
+    table.button.twitter table td {
+      background: #1daced !important;
+      border-color: #1daced;
+    }
+    table.button.google table td {
+      background: #DB4A39 !important;
+      border-color: #DB4A39;
+    }
+    .wrapper.secondary {
+      background: #f3f3f3;
+    }
+  </style>
+  <wrapper class="header">
+    <container>
+      <row class="collapse">
+        <columns small="6">
+          <img src="http://placehold.it/200x50/663399">
+        </columns>
+        <columns small="6">
+          <p class="text-right">Welcome!!</p>
+        </columns>
+      </row>
+    </container>
+  </wrapper>
+  
+  <container>
+  
+    <spacer size="16"></spacer>
+  
+    <row>
+      <columns small="12">
+        <h1>Hi, <%= firstname %> <%= lastname %> </h1>
+        <p class="lead">Welcome to Reminder. </p>
+        <p>Please Verify your email by clicking the link below!</p>
+        <callout class="primary">
+          <a href="<%= url %>">Link</a>
+        </callout>
+      </columns>
+    </row>
+
+  </container>

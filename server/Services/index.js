@@ -1,5 +1,5 @@
-import emailService from './email_service';
+import EmailService from './email_service';
 
 export default {
-    emailService,
+    EmailService,
 };

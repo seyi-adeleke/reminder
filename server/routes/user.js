@@ -26,6 +26,9 @@ const routes = (router) => {
 
     router.route('/users/:id/reminders')
         .get(isAuthenticated, validateParams, validateAccess, userController.getUserReminders);
+
+    router.route('/users/verify/:hash')
+        .put(isAuthenticated, userController.verifyUser);
 };
 
 export default routes;
