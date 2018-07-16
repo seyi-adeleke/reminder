@@ -62,7 +62,26 @@ const validateSignUpRequest = (req, res, next) => {
 
 const validateCreateReminderRequest = (req, res, next) => {
     const { message, triggerDate } = req.body;
-    if (!utils.checkStringsValidity(message) || !utils.checkDateValidity(triggerDate)) {
+    if (!utils.validateText(message) || !utils.checkDateValidity(triggerDate)) {
+        return httpUtilites.constructInvalidRequest(400, 'Invalid request body', res);
+    }
+    return next();
+};
+
+const validateUpdateReminderRequest = (req, res, next) => {
+    const { message, triggerDate } = req.body;
+    if (message && triggerDate) {
+        if (!utils.validateText(message) || !utils.checkDateValidity(triggerDate)) {
+            return httpUtilites.constructInvalidRequest(400, 'Invalid request body', res);
+        }
+        return next();
+    } else if (message) {
+        if (!utils.validateText(message)) {
+            return httpUtilites.constructInvalidRequest(400, 'Invalid request body', res);
+        }
+        return next();
+    }
+    if (!utils.checkDateValidity(triggerDate)) {
         return httpUtilites.constructInvalidRequest(400, 'Invalid request body', res);
     }
     return next();
@@ -88,4 +107,5 @@ export {
     validateSignUpRequest,
     validateCreateReminderRequest,
     validateAccess,
+    validateUpdateReminderRequest,
 };
