@@ -22,6 +22,13 @@ export default {
         return true;
     },
 
+    validateText: (text) => {
+        if (typeof text !== 'string') {
+            return false;
+        }
+        return true;
+    },
+
     trim: stringsObject => Object.keys(stringsObject).reduce((acc, key) => {
         acc[key.trim()] = stringsObject[key].trim();
         return acc;
