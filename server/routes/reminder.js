@@ -4,7 +4,7 @@ import {
     isAuthenticated,
     validateCreateReminderRequest,
     validateParams,
-    validateAccess,
+    validateUpdateReminderRequest,
 } from '../middleware';
 
 const {
@@ -18,7 +18,13 @@ const routes = (router) => {
 
     router.route('/reminders/:id')
         .get(isAuthenticated, validateParams, reminderController.getReminder)
-        .delete(isAuthenticated, validateAccess, validateParams, reminderController.deleteReminder);
+        .delete(isAuthenticated, validateParams, reminderController.deleteReminder)
+        .put(
+            isAuthenticated,
+            validateParams,
+            validateUpdateReminderRequest,
+            reminderController.updateReminder,
+        );
 };
 
 export default routes;
